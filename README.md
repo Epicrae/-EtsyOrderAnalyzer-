@@ -20,9 +20,8 @@ EtsyOrderAnalyzer is a C++ application designed to parse and analyze CSV files c
 2. Navigate to the project directory:
    cd EtsyOrderAnalyzer
 3. Compile the program:
-   g++ -o EtsyOrderAnalyzer main.cpp -std=c++11
-   
-4.Run the program:
+   g++ -o EtsyOrderAnalyzer main.cpp -std=c++11   
+ 4.Run the program:
    ./EtsyOrderAnalyzer
    Usage
 
