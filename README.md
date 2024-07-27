@@ -17,10 +17,13 @@ EtsyOrderAnalyzer is a C++ application designed to parse and analyze CSV files c
 ## Installing and Running
 1. **Clone the repository**: 
    git clone https://github.com/Epicrae/EtsyOrderAnalyzer.git
+
 2. Navigate to the project directory:
    cd EtsyOrderAnalyzer
+
 3. Compile the program:
    g++ -o EtsyOrderAnalyzer main.cpp -std=c++11   
+ 
  4.Run the program:
    ./EtsyOrderAnalyzer
 
