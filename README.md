@@ -27,8 +27,8 @@ EtsyOrderAnalyzer is a C++ application designed to parse and analyze CSV files c
  4. Run the program:
    ./EtsyOrderAnalyzer
 
-##Usage
-Enter the name of your CSV file: When prompted, enter the path to your CSV file.
+How To Use:
+Enter the name of your CSV file
 Select an option from the menu:
 1. View Shipping Countries
 2. View Shipping States
