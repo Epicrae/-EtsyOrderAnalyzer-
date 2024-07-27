@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <vector>
 using namespace std;
+
 // function prototypes
 void menu();                                      // menu display
 void analyzeCountries(const string &file_name);   // get the data for the
@@ -70,6 +71,7 @@ int main() {
 
   return 0;
 }
+
 void menu() {
   cout << "+---------------------------------+\n";
   cout << "|     EtsyOrderAnalyzer           |\n";
@@ -155,8 +157,8 @@ string toLower(string s) {
             [](unsigned char c) { return std::tolower(c); });
   return s;
 }
-// update to make parsing more flexable to find correct column bases on header
-// name and not position.
+
+// update to make parsing more flexible to find correct column based on header
 void analyzeLocations(const string &file_name,
                       vector<pair<string, int>> &sortedLocations,
                       const string &locationType) {
@@ -178,13 +180,12 @@ void analyzeLocations(const string &file_name,
   string header;
   int currentColumn = 0;
   string columnToFind = "Ship " + locationType;
-  string lowerColumnToFind = toLower(columnToFind);
 
   while (getline(headerStream, header, '\t')) {
-    if (toLower(header) == lowerColumnToFind) {
+    if (header == columnToFind) {
       columnIndex = currentColumn;
     }
-    if (toLower(header) == "ship country") {
+    if (header == "Ship Country") {
       countryColumnIndex = currentColumn;
     }
     currentColumn++;
@@ -195,47 +196,44 @@ void analyzeLocations(const string &file_name,
     return;
   }
 
-  // Get list of countries for state filtering
   unordered_set<string> countries;
   if (locationType == "State") {
-    ifstream countryFile(file_name);
-    getline(countryFile, line); // Skip header
-    while (getline(countryFile, line)) {
+    while (getline(file, line)) {
       istringstream ss(line);
+      vector<string> fields;
       string field;
-      for (int i = 0; i <= countryColumnIndex; ++i) {
-        getline(ss, field, '\t');
+      while (getline(ss, field, '\t')) {
+        fields.push_back(field);
       }
-      countries.insert(field);
+      if (fields.size() > countryColumnIndex) {
+        countries.insert(fields[countryColumnIndex]);
+      }
     }
+    file.clear();
+    file.seekg(0);
+    getline(file, line); // Skip header
   }
 
   // Process the data
-  file.clear();
-  file.seekg(0);
-  getline(file, line); // Skip header
   while (getline(file, line)) {
     istringstream ss(line);
     string field;
     string country;
-    for (int i = 0; i <= max(columnIndex, countryColumnIndex); ++i) {
-      if (!getline(ss, field, '\t')) {
-        cout << "Error: Unexpected end of line in CSV" << endl;
-        return;
-      }
-      if (i == countryColumnIndex) {
-        country = field;
-      }
-      if (i == columnIndex) {
-        if (!field.empty()) {
-          if (locationType == "City") {
-            // Normalize city names to uppercase
-            transform(field.begin(), field.end(), field.begin(), ::toupper);
-          }
-          if (locationType != "State" ||
-              countries.find(field) == countries.end()) {
-            locationOrderCount[field]++;
-          }
+    vector<string> fields;
+    while (getline(ss, field, '\t')) {
+      fields.push_back(field);
+    }
+    if (fields.size() > max(columnIndex, countryColumnIndex)) {
+      country = fields[countryColumnIndex];
+      if (!fields[columnIndex].empty()) {
+        if (locationType == "City") {
+          // Normalize city names to uppercase
+          transform(fields[columnIndex].begin(), fields[columnIndex].end(),
+                    fields[columnIndex].begin(), ::toupper);
+        }
+        if (locationType != "State" ||
+            countries.find(country) != countries.end()) {
+          locationOrderCount[fields[columnIndex]]++;
         }
       }
     }
@@ -247,3 +245,4 @@ void analyzeLocations(const string &file_name,
   sort(sortedLocations.begin(), sortedLocations.end(),
        [](const auto &a, const auto &b) { return a.second > b.second; });
 }
+
