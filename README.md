@@ -45,4 +45,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Contact
 Amber Frick - amberfricks@yahoo.com
 
-GitHub Profile - https://github.com/yourusername
+GitHub Profile - https://github.com/Epicrae
